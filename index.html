@@ -4,50 +4,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nova Lanches - Delivery</title>
+  <title>Nova Lanches</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
 </head>
-<body class="bg-yellow-50 min-h-screen">
-  <header class="bg-red-600 text-white p-4 text-center text-xl font-bold">
-    Nova Lanches 🍔
+<body class="bg-gradient-to-br from-yellow-50 to-yellow-100 min-h-screen text-gray-800">
+  <header class="bg-white shadow sticky top-0 z-10">
+    <div class="container mx-auto flex items-center justify-between p-4">
+      <h1 class="text-2xl font-bold text-red-600">🍔 Nova Lanches</h1>
+      <button onclick="document.getElementById('login-admin').classList.remove('hidden')" class="text-sm bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700">Painel Admin</button>
+    </div>
   </header>
 
-  <main class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="lista-produtos"></main>
+  <main class="container mx-auto px-4 py-8">
+    <h2 class="text-xl font-semibold mb-6">Cardápio</h2>
+    <div id="lista-produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
 
-  <aside class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center shadow-md">
-    <span id="resumo-carrinho" class="text-sm">Nenhum item no carrinho.</span>
-    <button onclick="finalizarPedido()" class="bg-green-600 text-white px-4 py-2 rounded-lg">Finalizar Pedido</button>
+  <aside class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex justify-between items-center shadow-inner">
+    <span id="resumo-carrinho" class="text-sm text-gray-700">Nenhum item no carrinho.</span>
+    <button onclick="finalizarPedido()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg text-sm">Finalizar Pedido</button>
   </aside>
-
-  <!-- Botão Admin -->
-  <button onclick="document.getElementById('login-admin').classList.remove('hidden')" class="fixed top-2 right-2 bg-gray-800 text-white px-3 py-1 rounded text-sm">Admin</button>
 
   <!-- Tela de Login Admin -->
   <div id="login-admin" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-6 rounded shadow-md w-80">
-      <h2 class="text-xl font-bold mb-4">Painel Admin</h2>
-      <input type="password" id="senha-admin" placeholder="Digite a senha" class="w-full mb-4 p-2 border rounded" />
-      <button onclick="entrarPainel()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Entrar</button>
+    <div class="bg-white p-6 rounded-xl shadow-xl w-96">
+      <h2 class="text-xl font-bold mb-4">Entrar no Painel</h2>
+      <input type="password" id="senha-admin" placeholder="Senha" class="w-full mb-4 p-3 border border-gray-300 rounded-lg" />
+      <button onclick="entrarPainel()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg w-full">Acessar</button>
     </div>
   </div>
 
   <!-- Painel Admin -->
-  <div id="painel-admin" class="fixed inset-0 bg-white p-6 hidden overflow-auto">
-    <h2 class="text-xl font-bold mb-4">Gerenciar Produtos</h2>
-    <button onclick="sairPainel()" class="mb-4 bg-red-500 text-white px-3 py-1 rounded">Sair</button>
-    <form id="form-produto" class="mb-4">
-      <input type="text" id="nome-produto" placeholder="Nome" class="border p-2 mr-2 rounded" required />
-      <input type="number" id="preco-produto" placeholder="Preço" class="border p-2 mr-2 rounded" required />
-      <select id="categoria-produto" class="border p-2 rounded" required>
+  <div id="painel-admin" class="fixed inset-0 bg-white p-8 overflow-y-auto hidden">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Painel Administrativo</h2>
+      <button onclick="sairPainel()" class="text-red-500 hover:text-red-600">Sair</button>
+    </div>
+    <form id="form-produto" class="flex flex-wrap gap-4 items-end mb-8">
+      <input type="text" id="nome-produto" placeholder="Nome do produto" class="flex-1 p-2 border rounded-lg" required />
+      <input type="number" id="preco-produto" placeholder="Preço" class="w-32 p-2 border rounded-lg" required />
+      <select id="categoria-produto" class="p-2 border rounded-lg" required>
         <option value="Tradicional">Tradicional</option>
         <option value="Especial">Especial</option>
       </select>
-      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Adicionar</button>
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-500">Adicionar</button>
     </form>
-    <ul id="lista-admin" class="space-y-2"></ul>
-    <h3 class="text-lg font-bold mt-6 mb-2">Pedidos Recebidos</h3>
-    <ul id="lista-pedidos" class="space-y-2"></ul>
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Produtos</h3>
+      <ul id="lista-admin" class="space-y-3 mb-8"></ul>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Pedidos Recebidos</h3>
+      <ul id="lista-pedidos" class="space-y-3"></ul>
+    </div>
   </div>
 
   <script src="script.js"></script>
