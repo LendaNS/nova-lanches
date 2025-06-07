@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel Admin - Açaí</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h1 class="mb-4 text-center">Painel de Administração</h1>
+
+    <button id="logoutBtn" class="btn btn-danger mb-4">Sair</button>
+
+    <h3>Pedidos Recebidos</h3>
+    <div id="pedidosContainer">
+      <!-- Pedidos aparecerão aqui -->
+    </div>
+
+    <button id="limparPedidosBtn" class="btn btn-warning mt-3">Limpar Pedidos</button>
+  </div>
+
+  <script>
+    // Verifica se está logado
+    if (sessionStorage.getItem('logado') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    const pedidosContainer = document.getElementById('pedidosContainer');
+    const limparPedidosBtn = document.getElementById('limparPedidosBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Função para mostrar pedidos
+    function mostrarPedidos() {
+      const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+
+      if (pedidos.length === 0) {
+        pedidosContainer.innerHTML = '<p>Nenhum pedido recebido.</p>';
+        return;
+      }
+
+      pedidosContainer.innerHTML = pedidos
+        .map(
+          (p) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">${p.nome} <small class="text-muted">(${p.data})</small></h5>
+            <p><strong>Tamanho:</strong> ${p.tamanho}</p>
+            <p><strong>Adicionais:</strong> ${p.adicionais.length > 0 ? p.adicionais.join(', ') : 'Nenhum'}</p>
+            <p><strong>Observações:</strong> ${p.observacoes || 'Nenhuma'}</p>
+          </div>
+        </div>`
+        )
+        .join('');
+    }
+
+    mostrarPedidos();
+
+    // Limpar pedidos
+    limparPedidosBtn.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja limpar todos os pedidos?')) {
+        localStorage.removeItem('pedidos');
+        mostrarPedidos();
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('logado');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
